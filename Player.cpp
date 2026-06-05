@@ -1,6 +1,6 @@
 #include "Player.h"
 #include "Field.h"
-#include "DxLib.h"
+
 
 //const = 定義　　　static = 静的（複数newをされても同じ物を使う）
 static const float VO = -10.0;
@@ -16,13 +16,10 @@ void Player::Image_Load()
 //最初に一回だけ必ず呼ばれる
 Player::Player()
 {
-	hImage = LoadGraph("絶望☆異世界転移/イラスト/仮プレイヤー.jpg");
+	playerGraph = LoadGraph("絶望☆異世界転移/イラスト/仮プレイヤー.jpg");
 	x = 200;
 	//velocity = 0
 	y = 500;  //初期位置
-
-	velocity = -10;
-	onGround = false;
 
 
 }
@@ -31,7 +28,8 @@ Player::Player()
 //最後に一回だけ必ず呼ばれる
 Player::~Player()
 {
-	
+	//画像の開放
+	DeleteGraph(hImage); 
 }
 
 //計算・処理するところ
