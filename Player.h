@@ -1,14 +1,9 @@
 #pragma once
 
-//DXライブラリの関数（LoadGraphなどを使うため）
-#include "DxLib.h"
-
 
 class Player 
 {
 
-	// 画像を読み込むための関数を「宣言」する
-	void Image_Load();
 public:
 	Player();  //コンストラクター（初期化）
 	~Player();  //デクストラクター（解放）
