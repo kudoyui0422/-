@@ -1,6 +1,6 @@
 #include "Player.h"
 #include "Field.h"
-
+#include "DxLib.h"
 
 //const = 定義　　　static = 静的（複数newをされても同じ物を使う）
 static const float VO = -10.0;
@@ -16,7 +16,7 @@ void Player::Image_Load()
 //最初に一回だけ必ず呼ばれる
 Player::Player()
 {
-	playerGraph = LoadGraph("絶望☆異世界転移/イラスト/仮プレイヤー.jpg");
+	hImage = LoadGraph("絶望/イラスト/仮プレイヤー.jpg");
 	x = 200;
 	//velocity = 0
 	y = 500;  //初期位置
@@ -55,21 +55,13 @@ void Player::Update()
 		y += MOVE_SPEED;
 	}
 
-	//地面・壁などの当たり判定
-	Field* field = FindGameObject<Field>();
-	if (field != nullptr) {
-		//見下ろし型だから足元の座標（x、y＋64）で障害物判定を行う
-		//field->HitCheckの戻り値に合わせて、めり込みを押し戻す処理を入れる
-		int ret = field->HitCheck(x, y + 64);
-		if (ret > 0) {
-			y -= ret;
-	}
+
 	
-	}
+	
 }
 
 //表示するところ
-void Player::Draw()
+void Player::Draw() const
 {
 	DrawRectGraph(x, y, 0, 0, 64, 64, hImage, 1);
 
