@@ -3,6 +3,8 @@
 //DXライブラリの関数（LoadGraphなどを使うため）
 #include "DxLib.h"
 
+//前方宣言
+class Field;
 
 class Player 
 {
@@ -12,9 +14,13 @@ class Player
 public:
 	Player();  //コンストラクター（初期化）
 	~Player();  //デクストラクター（解放）
-	void Image_Load();  //画像の読み込み処理
 	void Update();  //計算・更新処理
 	void Draw();  //描画処理
+
+	//main等からFieldのアドレスを受け取る
+	void SetField(Field* f) { field = f; }
+	int GetX() const { return x; }
+	int GetY() const { return y; }
 
 private:
 	int playerGraph;  //画像の識別番号
@@ -22,10 +28,8 @@ private:
 	float x, y;
 	float velocity;
 	bool onGround;
-	Field* field;
+	Field* field; //前方宣言をしたことで、エラーがなくなる
 
-	// 他のクラスからプレイヤーの座標を取得するための関数（必要に応じて使用）
-	int GetX() const { return x; }
-	int GetY() const { return y; }
+	
 };
 
