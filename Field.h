@@ -1,9 +1,11 @@
 #pragma once
 #include "Field.h"
-
+#include "DxLib.h"
 
 class Field
 {
+
+	void Image_Load();
 public:
 	Field();
 	~Field();

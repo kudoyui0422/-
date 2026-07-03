@@ -6,21 +6,19 @@
 #include"Player.h"
 #include"Field.h"
 
-int main();
-int main(int argc, char* argv[]);
-
-//C2731.cpp
-extern "C" void WinMain(int, char*, char*);
-void WinMain(int, short, char*, char*); //C2731
-
-int WINAPI WinMain(HINSTANCE hInatance, HINSTANCE hPrevInstance, LPSTR lpCmbLine, int nCmdShow)
+int main()
 {
+    //コンソールでDXライブラリを使う時は最初にこれを入れる
+    ChangeWindowMode(TRUE);
+
+    //画面サイズ
     SetGraphMode(Screen::WIDTH, Screen::HEIGHT, 32);
     SetOutApplicationLogValidFlag(FALSE); //ログを出さない
 
     SetMainWindowText(Screen::WINDOW_NAME);
     SetWindowSizeExtendRate(Screen::WINDOW_EXTEND);
     ChangeWindowMode(Screen::WINDOW_MODE); //Windowモードの場合
+
     //DXライブラリの初期化処理
     if (DxLib_Init() == -1)
     {
@@ -33,10 +31,10 @@ int WINAPI WinMain(HINSTANCE hInatance, HINSTANCE hPrevInstance, LPSTR lpCmbLine
     //プレイヤーとフィールドの変数（インスタンス）を作る
     Player player;
     Field field;
+    player.SetField(&field);
 
     //プレイヤーにフィールドの場所を教えてあげる
     player.SetField(&field);
-
 
     //メインループ（Escキーが押されるか、ウィンドウが閉じられるまで繰り返す）
     while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
@@ -64,8 +62,4 @@ int WINAPI WinMain(HINSTANCE hInatance, HINSTANCE hPrevInstance, LPSTR lpCmbLine
     return 0;
 }
 
-int main()
-{
-    return 0;
-}
 

@@ -16,7 +16,7 @@ void Player::Image_Load()
 //最初に一回だけ必ず呼ばれる
 Player::Player()
 {
-	hImage = LoadGraph("イラスト/仮プレイヤー.jpg");
+	hImage = LoadGraph("イラスト/Player.png");
 	
 	x = 200;
 	y = 0;
@@ -60,9 +60,9 @@ void Player::Update()
 	//地面・壁などの当たり判定
 	
 	if (field != nullptr) {
-		//見下ろし型だから足元の座標（x、y＋64）で障害物判定を行う
+		//見下ろし型だから足元の座標（x、y＋128)障害物判定を行う
 		//field->HitCheckの戻り値に合わせて、めり込みを押し戻す処理を入れる
-		int ret = field->HitCheck(x, y + 64);
+		int ret = field->HitCheck(x, y + 128);
 		if (ret > 0) {
 			y -= ret;
 	    }
@@ -73,6 +73,6 @@ void Player::Update()
 //表示するところ
 void Player::Draw()
 {
-	DrawRectGraph(x, y, 0, 0, 64, 64, hImage, 1);
+	DrawRectGraph(x, y, 0, 0, 128, 128, hImage, 1);
 
 }
