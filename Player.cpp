@@ -1,12 +1,15 @@
 #include "Player.h"
 #include "Field.h"
-
+#include "NPC.h"
+#include <cmath> //距離演算に必要
 
 //const = 定義　　　static = 静的（複数newをされても同じ物を使う）
-static const float VO = -10.0;
 
-//移動速度の定数
 static const int MOVE_SPEED = 2;
+
+//会話ができる距離（ピクセル単位）
+static const int TALK_RANGE = 100;
+
 
 void Player::Image_Load()
 {
@@ -37,8 +40,10 @@ Player::~Player()
 	DeleteGraph(hImage);
 }
 
+
+
 //計算・処理するところ
-void Player::Update()
+void Player::Update(NPC& npc)
 {
 	//現在のエンターキーの入力状態を取得
 	bool currentKeyEnter = (CheckHitKey(KEY_INPUT_RETURN) == 1);
@@ -53,9 +58,21 @@ void Player::Update()
 		}
 		else {
 			//ここにMobの距離判定を入れる
+			float playerCenterX = x + 64.0f;
+			float playerCenterY = y + 64.0f;
+			float npcCenterX = npc.GetX() + 64.0f;
+			float npcCenterY = npc.GetY() + 64.0f;
 			//ここにMobの座標
-			isTalking = true;
-
+			// 2点間の距離の2乗を計算（三平方の定理。高速化のためsqrtは省略）
+			float dx = playerCenterX - npcCenterX;
+			float dy = playerCenterY - npcCenterY;
+			float distanceSq = (dx * dx) + (dy * dy);
+		
+			// 一定範囲内にNPCがいれば会話を開始
+			if (distanceSq <= (TALK_RANGE * TALK_RANGE))
+			{
+				isTalking = true;
+			}
 		}
 	}
 
@@ -87,6 +104,56 @@ void Player::Update()
 	if (CheckHitKey(KEY_INPUT_S)) {
 		y += MOVE_SPEED;
 	}
+
+	//NPCとの当たり判定
+	//AABB判定
+	float pLeft = x + 40.0f;
+	float pRight = x + 128.0f - 40.0f;
+	float pTop = y + 112.0f;  // 上から112px下げて、足元16px分にする
+	float pBottom = y + 128.0f; 
+
+	float nLeft = npc.GetX() + 40.0f;
+	float nRight = npc.GetX() + npc.GetWindth() - 40.0f;
+	float nTop = npc.GetY() + npc.GetHeight() - 16.0f;
+	float nBottom = npc.GetY() + npc.GetHeight();
+
+	//4方向全て重なっている場合、衝突している
+	if (pRight > nLeft && pLeft < nRight && pBottom > nTop && pTop < nBottom)
+	{
+		//どの方向から一番浅くめり込んでいるかを計算して、その方向に押し戻す
+		float overlapLeft = pRight - nLeft;
+		float overlapRight = nRight - pLeft;
+		float overlapTop = pBottom - nTop;
+		float overlapBottom = nBottom - pTop;
+
+		//X軸とY軸のどっちのめり込みが小さいか比較
+		float minOverlapX = (overlapLeft < overlapRight) ? overlapLeft : overlapRight;
+		float minOverlapY = (overlapTop < overlapBottom) ? overlapTop : overlapBottom;
+
+
+		if (minOverlapX < minOverlapY)
+		{
+			// X軸方向に押し戻す
+			if (overlapLeft < overlapRight) {
+				x -= overlapLeft; // 左側にぶつかったので左に押し戻す
+			}
+			else {
+				x += overlapRight; // 右側にぶつかったので右に押し戻す
+			}
+		}
+		else
+		{
+
+			// Y軸方向に押し戻す
+			if (overlapTop < overlapBottom) {
+				y -= overlapTop; // 上側にぶつかったので上に押し戻す
+			}
+			else {
+				y += overlapBottom; // 下側にぶつかったので下に押し戻す
+			}
+		}
+	}
+
 
 	//フィールドの移動制限
 	//左はし

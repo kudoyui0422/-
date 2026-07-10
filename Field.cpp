@@ -8,7 +8,7 @@ void Field::Image_Load()
 }
 Field::Field()
 {//画像サイズ510×510（1280*720=560,,,560/2=280)
-	hImage = LoadGraph("イラスト/Field.jpg");
+	hImage = LoadGraph("イラスト/haikei.jpg");
 	x = 280;
 	y = 0;
 }

@@ -5,16 +5,18 @@
 
 //前方宣言
 class Field;
+class NPC;
 
 class Player 
 {
+
 
 	// 画像を読み込むための関数を「宣言」する
 	void Image_Load();
 public:
 	Player();  //コンストラクター（初期化）
 	~Player();  //デクストラクター（解放）
-	void Update();  //計算・更新処理
+	void Update(NPC& npc);
 	void Draw();  //描画処理
 
 	//main等からFieldのアドレスを受け取る
