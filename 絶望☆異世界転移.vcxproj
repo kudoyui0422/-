@@ -132,12 +132,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Field.cpp" />
+    <ClCompile Include="NPC.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Taitoru.cpp" />
     <ClCompile Include="絶望☆異世界転移.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Field.h" />
+    <ClInclude Include="NPC.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Taitoru.h" />

@@ -30,6 +30,7 @@ private:
 	bool onGround;
 	Field* field; //前方宣言をしたことで、エラーがなくなる
 
-	
+	bool isTalking; //現在会話中かどうか
+	bool oldKeyEnter; //前のフレームでエンターキーが押されていたか
 };
 
