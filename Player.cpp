@@ -40,6 +40,11 @@ Player::~Player()
 	DeleteGraph(hImage);
 }
 
+//プロローグ終了後に強制的に会話状態にする
+void Player::ForceStartTalk()
+{
+	isTalking = true;
+}
 
 
 //計算・処理するところ
@@ -51,7 +56,7 @@ void Player::Update(NPC& npc)
 	//今押されたか、かつ会話中じゃない場合
 	if (currentKeyEnter && !oldKeyEnter)
 	{
-		if (currentKeyEnter)
+		if (isTalking)
 		{
 			//会話中なら終了
 			isTalking = false;
@@ -59,9 +64,10 @@ void Player::Update(NPC& npc)
 		else {
 			//ここにMobの距離判定を入れる
 			float playerCenterX = x + 64.0f;
-			float playerCenterY = y + 64.0f;
+			float playerCenterY = y + 120.0f; //足元付近
 			float npcCenterX = npc.GetX() + 64.0f;
-			float npcCenterY = npc.GetY() + 64.0f;
+			float npcCenterY = npc.GetY() + 120.0f; //足元付近
+
 			//ここにMobの座標
 			// 2点間の距離の2乗を計算（三平方の定理。高速化のためsqrtは省略）
 			float dx = playerCenterX - npcCenterX;
@@ -69,7 +75,7 @@ void Player::Update(NPC& npc)
 			float distanceSq = (dx * dx) + (dy * dy);
 		
 			// 一定範囲内にNPCがいれば会話を開始
-			if (distanceSq <= (TALK_RANGE * TALK_RANGE))
+			if (distanceSq <= (130.0f * 130.0f))
 			{
 				isTalking = true;
 			}

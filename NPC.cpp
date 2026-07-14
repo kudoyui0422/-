@@ -19,9 +19,13 @@ NPC::NPC()
 
 }
 
+//デストラクター
 NPC::~NPC()
 {
+	//画像のメモリ解放漏れを防ぐ
+	DeleteGraph(hImage);
 }
+
 
 void NPC::Update()
 {
@@ -30,5 +34,5 @@ void NPC::Update()
 //表示するところ
 void NPC::Draw()
 {
-	DrawRectGraph(x, y, 0, 0, 128, 128, hImage, 1);
+	DrawRectGraph((int)x, (int)y, 0, 0, 128, 128, hImage, 1);
 }

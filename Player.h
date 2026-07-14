@@ -9,20 +9,8 @@ class NPC;
 
 class Player 
 {
-
-
 	// 画像を読み込むための関数を「宣言」する
 	void Image_Load();
-public:
-	Player();  //コンストラクター（初期化）
-	~Player();  //デクストラクター（解放）
-	void Update(NPC& npc);
-	void Draw();  //描画処理
-
-	//main等からFieldのアドレスを受け取る
-	void SetField(Field* f) { field = f; }
-	int GetX() const { return x; }
-	int GetY() const { return y; }
 
 private:
 	int playerGraph;  //画像の識別番号
@@ -34,5 +22,22 @@ private:
 
 	bool isTalking; //現在会話中かどうか
 	bool oldKeyEnter; //前のフレームでエンターキーが押されていたか
+	bool GetTalking() const { return isTalking; }
+
+public:
+	Player();  //コンストラクター（初期化）
+	~Player();  //デクストラクター（解放）
+	void ForceStartTalk();
+	void Update(NPC& npc);
+	void Draw();  //描画処理
+
+	//main等からFieldのアドレスを受け取る
+	void SetField(Field* f) { field = f; }
+	int GetX() const { return x; }
+	int GetY() const { return y; }
+
+	//mainから会話状態をチェック出来るようにpublicに配置
+	bool GetIsTalking() const { return isTalking; }
+
 };
 
