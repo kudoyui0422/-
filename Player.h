@@ -15,6 +15,11 @@ class Player
 private:
 	int playerGraph;  //画像の識別番号
 	int hImage;
+	int hImageBack; //後ろ向き画像
+	int hImageLeft; //左向き画像
+	int hImageRight; //右向き画像
+	int direction; //プレイヤーの向き(0:前、1：後ろ、2：左、3；右)
+
 	float x, y;
 	float velocity;
 	bool onGround;
@@ -38,6 +43,8 @@ public:
 
 	//mainから会話状態をチェック出来るようにpublicに配置
 	bool GetIsTalking() const { return isTalking; }
+
+	void SetOldKeyEnter(bool flag) { oldKeyEnter = flag; }
 
 };
 

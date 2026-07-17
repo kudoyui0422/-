@@ -20,6 +20,9 @@ void Player::Image_Load()
 Player::Player()
 {
 	hImage = LoadGraph("イラスト/Player.png");
+	hImageBack = LoadGraph("イラスト/Player後ろ.png");
+	hImageLeft = LoadGraph("イラスト/Player左.png");
+	hImageRight = LoadGraph("イラスト/Player右.png");
 
 	x = 580;
 	y = 0;
@@ -30,6 +33,8 @@ Player::Player()
 
 	isTalking = false;
 	oldKeyEnter = false;
+
+	direction = 0; //起動直後の初期向き（前）
 }
 
 //デクストラクター
@@ -38,6 +43,9 @@ Player::~Player()
 {
 	//画像の開放
 	DeleteGraph(hImage);
+	DeleteGraph(hImageBack);
+	DeleteGraph(hImageLeft);
+	DeleteGraph(hImageRight);
 }
 
 //プロローグ終了後に強制的に会話状態にする
@@ -94,21 +102,25 @@ void Player::Update(NPC& npc)
 	//Dキーで右方向に移動
 	if (CheckHitKey(KEY_INPUT_D)) {
 		x += MOVE_SPEED;
+		direction = 3; //右向き
 	}
 
 	//Aキーで左方向に移動
 	if (CheckHitKey(KEY_INPUT_A)) {
 		x -= MOVE_SPEED;
+		direction = 2; //左向き
 	}
 
 	//Wキーで上方向に移動
 	if (CheckHitKey(KEY_INPUT_W)) {
 		y -= MOVE_SPEED;
+		direction = 1; //後ろ
 	}
 
 	//Sキーで下方向に移動
 	if (CheckHitKey(KEY_INPUT_S)) {
 		y += MOVE_SPEED;
+		direction = 0; //前
 	}
 
 	//NPCとの当たり判定
@@ -202,6 +214,30 @@ void Player::Update(NPC& npc)
 //表示するところ
 void Player::Draw()
 {
-	DrawRectGraph(x, y, 0, 0, 128, 128, hImage, 1);
+
+	int currentHandle = hImage; //デフォルト
+
+	//向きに応じて描画する画像を切り替える
+	switch (direction)
+	{
+	case 0: //前
+		currentHandle = hImage;
+		break;
+
+	case 1: //後ろ
+		currentHandle = hImageBack;
+		break;
+
+	case 2: //右
+		currentHandle = hImageLeft;
+		break;
+
+	case 3: //左
+		currentHandle = hImageRight;
+		break;
+
+	}
+	//決定した画像ハンドル
+	DrawRectGraph(x, y, 0, 0, 128, 128, currentHandle, 1);
 
 }

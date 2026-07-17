@@ -5,7 +5,7 @@
 Title::Title()
 {
 	//画像読み込み
-	hTitleBack = LoadGraph("イラスト/タイトル画像.jpg");
+	hTitleBack = LoadGraph("イラスト/タイトル画像新.png");
 	hButtonStart = LoadGraph("イラスト/はじめるボタン.png");
 	hButtonEnd = LoadGraph("イラスト/おわるボタン.png");
 

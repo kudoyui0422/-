@@ -1,5 +1,6 @@
 ﻿// 絶望☆異世界転移.cpp : このファイルには 'main' 関数が含まれています。プログラム実行の開始と終了がそこで行われます。
 //
+#include<string> //std::stringを使うのに必要
 #include<DxLib.h>
 #include <iostream>
 #include "Screen.h"
@@ -34,7 +35,7 @@ int main()
 
     // 各クラスのインスタンスを作る
     Title title;
-    Prologue prologue; // 💡 プロローグのインスタンスを作成！
+    Prologue prologue; // プロローグのインスタンスを作成
     Player player;
     Field field;
     NPC npc;
@@ -42,9 +43,17 @@ int main()
     player.SetField(&field);
     npc.SetField(&field);
 
+    int hPlayerFace = LoadGraph("イラスト/Playerアイコン.jpg");
     int hNPCFace = LoadGraph("イラスト/NPCアイコン.png");
 
+    // プロローグ終了後のウェイト用タイマー（60フレーム ＝ 約1秒）
+    int prologueWaitTimer = 0;
+
+    bool isFirstPrologueEnd = false;
+    bool hasTalkedFirst = false; //独り言が終わったか
+
     GameState state = STATE_TITLE;
+
 
     while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
     {
@@ -79,7 +88,13 @@ int main()
             if (prologueResult == 1)
             {
                 state = STATE_GAME; // 本編へ進む
-                player.ForceStartTalk(); // 主人公の独り言を強制開始
+               
+
+                player.SetOldKeyEnter(true); //プロローグが終わった後のエンター押しっぱを相殺
+
+                // ここではまだ会話を開始せず、タイマーをリセットする
+                prologueWaitTimer = 0;
+                isFirstPrologueEnd = true;
             }
         }  
         
@@ -87,38 +102,90 @@ int main()
      
         else if (state == STATE_GAME)
         {
+            // プロローグ直後かつ、まだ会話が始まっていない間はタイマーを毎フレーム進める
+            if (isFirstPrologueEnd && !player.GetIsTalking())
+            {
+                prologueWaitTimer++;
+
+                // 120フレーム（約2秒）経ったら会話を強制開始
+                if (prologueWaitTimer >= 120)
+                {
+                    player.ForceStartTalk();
+                    player.SetOldKeyEnter(true); // エンターキーの押しっぱなし相殺
+                }
+            }
+
+            
             player.Update(npc);
             field.Draw();
 
+            // 描画順の制御（Y座標で前後関係を決める）
             if (player.GetY() < npc.GetY()) { player.Draw(); npc.Draw(); }
             else { npc.Draw(); player.Draw(); }
 
+            // 会話中の場合の処理
             if (player.GetIsTalking())
             {
+                // ① 背景の黒い透明なボックスを描画
                 SetDrawBlendMode(DX_BLENDMODE_ALPHA, 200);
                 DrawBox(280, 580, 1000, 720, GetColor(0, 0, 0), TRUE);
                 SetDrawBlendMode(DX_BLENDMODE_NOBLEND, 0);
 
+                // 外枠（白）
                 DrawBox(280, 580, 1000, 720, GetColor(255, 255, 255), FALSE);
-                DrawExtendGraph(290, 590, 290 + 120, 590 + 120, hNPCFace, TRUE);
 
-                std::string text = "「ここはどこだ？！」";
-                float dx = (player.GetX() + 64) - (npc.GetX() + 64);
-                float dy = (player.GetY() + 120) - (npc.GetY() + 120);
-                if ((dx * dx + dy * dy) <= (130.0f * 130.0f))
+                std::string text = "";
+                int currentFaceHandle = -1;
+
+                // プロローグ終了後のプレイヤーのセリフ
+                if (isFirstPrologueEnd)
                 {
-                    text = npc.GetMessage();
+                    text = "「ここはどこだ？！」";
+                    currentFaceHandle = hPlayerFace; // プレイヤーのアイコン
+                }
+                //NPCのセリフ
+                else
+                {
+                    float dx = (player.GetX() + 64) - (npc.GetX() + 64);
+                    float dy = (player.GetY() + 120) - (npc.GetY() + 120);
+                    float distanceSq = (dx * dx) + (dy * dy);
+
+                    if (distanceSq <= (130.0f * 130.0f))
+                    {
+                        text = npc.GetMessage();
+                        currentFaceHandle = hNPCFace;
+                    }
+                    else
+                    {
+                        text = "「……。」";
+                        currentFaceHandle = hPlayerFace;
+                    }
+                }
+
+                // ③ 選ばれた顔グラフィックと文字列を描画
+                if (currentFaceHandle != -1)
+                {
+                    DrawExtendGraph(290, 590, 290 + 120, 590 + 120, currentFaceHandle, TRUE);
                 }
 
                 SetFontSize(24);
-                DrawString(430, 600, text.c_str(), GetColor(255, 255, 255));
+                DrawFormatString(430, 600, GetColor( 255, 255, 255), "%s", text.c_str());
                 SetFontSize(16);
+            }
+            else
+            {
+                if (hasTalkedFirst)
+                {
+                    // 会話ウィンドウが閉じられたら、プロローグ直後フラグを安全に解除して通常モードに戻す
+                    isFirstPrologueEnd = false;
+                }
             }
         }
 
         ScreenFlip();
     }
 
+    DeleteGraph(hPlayerFace);
     DeleteGraph(hNPCFace);
     DxLib_End();
     return 0;
