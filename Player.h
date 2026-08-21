@@ -46,5 +46,8 @@ public:
 
 	void SetOldKeyEnter(bool flag) { oldKeyEnter = flag; }
 
+	//外部から会話状態を強制的に変更出来る関数
+	void SetIsTalking(bool flag) { isTalking = flag; }
+
 };
 

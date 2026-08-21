@@ -50,8 +50,11 @@ int main()
     int prologueWaitTimer = 0;
 
     bool isFirstPrologueEnd = false;
+    bool hasStartedFirstTalk = false; //独り言が始まったか
     bool hasTalkedFirst = false; //独り言が終わったか
 
+   // main側で会話中のエンターキーの「押し下がり」を管理するフラグ
+        bool oldMainKeyEnter = false;
     GameState state = STATE_TITLE;
 
 
@@ -95,6 +98,8 @@ int main()
                 // ここではまだ会話を開始せず、タイマーをリセットする
                 prologueWaitTimer = 0;
                 isFirstPrologueEnd = true;
+                hasTalkedFirst = false; //プロローグに入るたびにフラグを初期化
+                hasStartedFirstTalk = false; //初期化
             }
         }  
         
@@ -112,6 +117,7 @@ int main()
                 {
                     player.ForceStartTalk();
                     player.SetOldKeyEnter(true); // エンターキーの押しっぱなし相殺
+                    hasStartedFirstTalk = true;
                 }
             }
 
@@ -138,7 +144,7 @@ int main()
                 int currentFaceHandle = -1;
 
                 // プロローグ終了後のプレイヤーのセリフ
-                if (isFirstPrologueEnd)
+                if (isFirstPrologueEnd && !hasTalkedFirst)
                 {
                     text = "「ここはどこだ？！」";
                     currentFaceHandle = hPlayerFace; // プレイヤーのアイコン
@@ -174,10 +180,13 @@ int main()
             }
             else
             {
-                if (hasTalkedFirst)
+                //会話中でない時の処理
+                if (isFirstPrologueEnd && hasStartedFirstTalk)
                 {
                     // 会話ウィンドウが閉じられたら、プロローグ直後フラグを安全に解除して通常モードに戻す
+                    hasTalkedFirst = true;
                     isFirstPrologueEnd = false;
+
                 }
             }
         }

@@ -14,8 +14,11 @@ NPC::NPC()
 {
 	hImage = LoadGraph("イラスト/NPC.png");
 
-	x = 350;
+	x = 580;
 	y = 150;
+
+	//最初は0ページから
+	messageIndex = 0;
 
 }
 
@@ -35,4 +38,18 @@ void NPC::Update()
 void NPC::Draw()
 {
 	DrawRectGraph((int)x, (int)y, 0, 0, 128, 128, hImage, 1);
+}
+
+//ページ番号に応じたセルフを返す
+std::string NPC::GetMessage()
+{
+	if (messageIndex == 0)
+	{
+		return"「　ようこそ異世界へ！　\n　ここは絶望に満ちた世界だよ。」";
+	}
+	else if (messageIndex == 1)
+	{
+		return"「元の世界に帰りたい？ぼくが手伝ってあげる。」";
+	}
+	return "";
 }
