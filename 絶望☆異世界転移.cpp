@@ -62,6 +62,8 @@ int main()
     {
         ClearDrawScreen();
 
+        //現在のフレームのエンターキーの入力状態を取得
+        bool currentKeyEnter = (CheckHitKey(KEY_INPUT_RETURN) == 1);
        
         // ① タイトル画面の処理
        
@@ -81,7 +83,7 @@ int main()
             }
         }
    
-        // ② プロローグ画面の処理（Prologueクラスに丸投げ！）
+        // ② プロローグ画面の処理
   
         else if (state == STATE_PROLOGUE)
         {
@@ -100,6 +102,7 @@ int main()
                 isFirstPrologueEnd = true;
                 hasTalkedFirst = false; //プロローグに入るたびにフラグを初期化
                 hasStartedFirstTalk = false; //初期化
+                npc.ResetMessage(); //NPCのメッセージも初期化
             }
         }  
         
@@ -149,7 +152,14 @@ int main()
                     text = "「ここはどこだ？！」";
                     currentFaceHandle = hPlayerFace; // プレイヤーのアイコン
                 }
-                //NPCのセリフ
+
+                // 独り言の最中にエンターキーが押されたら会話を閉じる
+                if (currentKeyEnter && !oldMainKeyEnter)
+                {
+                    player.SetIsTalking(false);
+                }
+
+                //NPCのセリフと選択肢
                 else
                 {
                     float dx = (player.GetX() + 64) - (npc.GetX() + 64);

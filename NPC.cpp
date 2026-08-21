@@ -51,5 +51,13 @@ std::string NPC::GetMessage()
 	{
 		return"「元の世界に帰りたい？ぼくが手伝ってあげる。」";
 	}
+	else if (messageIndex == 2)
+	{
+		return"「どうやって帰るの？。」"; //主人公の問い返し
+	}
+	else if (messageIndex == 3)
+	{
+		return"「今から簡単な質問をするから　\n　君はそれにこたえるだけでいいよ。」"; //選択して前の問い
+	}
 	return "";
 }

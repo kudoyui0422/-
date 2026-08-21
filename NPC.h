@@ -31,11 +31,14 @@ public:
 	//messageIndexに応じたセリフを返すように関数化
 	std::string GetMessage();
 
+	//現在のメッセージのページ番号を取得する関数
+	int GetMessageIndex() const { return messageIndex; }
+
 	//メッセージを次のページに進める関数
 	void AdvanceMessage() { messageIndex++; }
 
 	//会話が終わった時や、最初から話すときのためにリセット
-	void ResetMessade() { messageIndex = 0; }
+	void ResetMessage() { messageIndex = 0; }
 
 
 	//main等からFieldのアドレスを受け取る
