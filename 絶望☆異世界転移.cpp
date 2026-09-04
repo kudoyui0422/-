@@ -51,8 +51,8 @@ int main()
     int hHappyEndGraph = LoadGraph("イラスト/ハッピーエンド.jpg");  // エンド1用
     int hBadEndGraph = LoadGraph("イラスト/バッドエンド.jpg");  // エンド2用
     int hNormalEndGraph = LoadGraph("イラスト/ノーマルエンド.jpg"); // ノーマル用
-    int hEvolutionEndGraph = -1; // エンド3用（まだ無いのでとりあえず-1）
-    int hWeakEndGraph = -1; // エンド4用（まだ無いのでとりあえず-1）
+    int hEvolutionEndGraph = LoadGraph("イラスト/進化エンド.jpg"); // エンド3用（まだ無いのでとりあえず-1）
+    int hWeakEndGraph = LoadGraph("イラスト/ノーマルエンド.jpg"); // エンド4用
 
     // プロローグ終了後のウェイト用タイマー（60フレーム ＝ 約1秒）
 
@@ -227,7 +227,7 @@ int main()
                                 }
                                 else if (!q1 && q2 && q3 && q4) 
                                 {
-                                    currentEndType = 4;              // 衰弱エンド
+                                    currentEndType = 5;              // ノーマル
                                     hCurrentEndGraph = hWeakEndGraph;
                                 }
                                 else
@@ -427,18 +427,34 @@ int main()
         std::string endName = "";
         unsigned int textColor = GetColor(255, 255, 255); //通常の文字の色は白
 
-        if (currentEndType == 1) endName = "END 1 「ハッピーエンド」";
-
+        if (currentEndType == 1)
+        {
+            endName = "「ハッピーエンド」いつもの通学路";
+        }
+        else
         if (currentEndType == 2)
         {
-            endName = "「バッドエンド」";
+            endName = "「バッドエンド」口が悪い奴は嫌い";
             //バッドエンドの時は文字は赤
-            textColor = GetColor(200, 0, 0);
+            textColor = GetColor(50, 220, 50);
         }
-        
-        if (currentEndType == 3) endName = "END 3 「進化エンド」";
-        if (currentEndType == 4) endName = "END 4 「衰弱エンド」";
-        if (currentEndType == 5) endName = "その他 「ノーマルエンド」";
+        else
+            if (currentEndType == 3)
+            {
+                endName = "「進化エンド」ともに行こう";
+                textColor = GetColor(200, 0, 0);
+            }
+        else
+        if (currentEndType == 4)
+        {
+            endName = "「ノーマルエンド」目覚めたら...";
+           
+        }
+        else
+        if (currentEndType == 5)
+        { 
+            endName = " 「ノーマルエンド」目覚めたら...";
+        }
         DrawFormatString(60, Screen::HEIGHT - 100, textColor, "%s", endName.c_str());
         SetFontSize(16);
 
