@@ -4,7 +4,7 @@
 Prologue::Prologue()
 {
     // トラックのキキー音を読み込み
-    sfxTruck = LoadSoundMem("音/truck.mp3");
+    sfxTruck = LoadSoundMem("sound/TruckSound.mp3");
     prologueStep = 0;
     oldKeyReturn = false;
 }

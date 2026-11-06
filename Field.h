@@ -17,6 +17,6 @@ public:
 private:
 	int hImage;
 	float x, y;
-
+	int FieldBGM;
 };
 

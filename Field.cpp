@@ -11,11 +11,17 @@ Field::Field()
 	hImage = LoadGraph("イラスト/haikei.jpg");
 	x = 280;
 	y = 0;
+
+	//FieldBGM読み込み
+	FieldBGM = LoadSoundMem("Sound/T.mp3");
+
+	
 }
 
 Field::~Field()
 {
-
+	// 音声データの解放
+	DeleteSoundMem(FieldBGM);
 }
 
 void Field::Update()
